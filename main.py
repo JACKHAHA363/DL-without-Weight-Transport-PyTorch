@@ -1,6 +1,7 @@
 import argparse
 import os
 
+import numpy as np
 import torch
 import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
@@ -29,8 +30,16 @@ parser.add_argument('--max_epochs', type=int, default=180)
 parser.add_argument('--log_interval', type=int, default=40)
 parser.add_argument('--num_workers', type=int, default=12)
 parser.add_argument('--kp_decay', type=float, default=0.9)
+parser.add_argument('--seed', type=int, default=None)
 
 cfg = parser.parse_args()
+
+# Set seed
+if cfg.seed is not None:
+    torch.manual_seed(cfg.seed)
+    np.random.seed(cfg.seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 best_acc = 0  # best test accuracy
 start_epoch = 0
